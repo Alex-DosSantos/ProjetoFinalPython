@@ -8,14 +8,14 @@ from .models import Livro, Emprestimo
 from .forms import LivroForm, EmprestimoForm
 from django.contrib.auth.models import User
 
-# Função home agora é um dashboard dinâmico
+
 def home(request):
-    # Contagem para os cards de estatísticas
+    
     num_livros = Livro.objects.count()
     num_emprestimos_ativos = Emprestimo.objects.filter(status='ativo').count()
     num_usuarios = User.objects.count()
     
-    # Busca os 4 livros adicionados mais recentemente
+    
     livros_recentes = Livro.objects.order_by('-id')[:4]
     
     context = {
@@ -26,7 +26,7 @@ def home(request):
     }
     return render(request, 'biblioteca_core/home.html', context)
 
-# --- Views para Livro ---
+
 class LivroListView(LoginRequiredMixin, ListView):
     model = Livro
     template_name = 'biblioteca_core/livro_list.html'
@@ -63,7 +63,7 @@ class LivroDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'biblioteca_core/livro_confirm_delete.html'
     success_url = reverse_lazy('livro-list')
 
-# --- Views para Empréstimo ---
+
 class EmprestimoListView(LoginRequiredMixin, ListView):
     model = Emprestimo
     template_name = 'biblioteca_core/emprestimo_list.html'
