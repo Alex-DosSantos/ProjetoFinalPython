@@ -8,6 +8,8 @@ from .views import (
     LivroDeleteView,
     EmprestimoListView,
     EmprestimoCreateView,
+    devolver_livro,
+    EmprestimoPendenteListView,  
 )
 
 urlpatterns = [
@@ -21,7 +23,11 @@ urlpatterns = [
     path('livro/<int:pk>/editar/', LivroUpdateView.as_view(), name='livro-update'),
     path('livro/<int:pk>/deletar/', LivroDeleteView.as_view(), name='livro-delete'),
     
-    
+   
     path('emprestimos/', EmprestimoListView.as_view(), name='emprestimo-list'),
     path('emprestimo/novo/', EmprestimoCreateView.as_view(), name='emprestimo-create'),
+    path('emprestimo/<int:pk>/devolver/', devolver_livro, name='emprestimo-devolver'),
+    
+    
+    path('emprestimos/pendentes/', EmprestimoPendenteListView.as_view(), name='emprestimo-pendentes-list'),
 ]

@@ -17,14 +17,15 @@
             <p><strong>Ano de Publicação:</strong> {{ object.ano_publicacao }}</p>
             <p><strong>ISBN:</strong> {{ object.isbn }}</p>
             <p><strong>Quantidade Disponível:</strong> {{ object.quantidade_disponivel }}</p>
-            
             <hr>
-            
             <h4>Sinopse</h4>
             <p>{{ object.sinopse|linebreaksbr|default:"Sinopse não disponível." }}</p>
             
             <a href="{% url 'livro-list' %}" class="btn btn-secondary mt-3">Voltar para a Lista</a>
-            <a href="{% url 'livro-update' object.id %}" class="btn btn-warning mt-3">Editar</a>
+            {% if user.is_staff %}
+                <a href="{% url 'livro-update' object.id %}" class="btn btn-warning mt-3">Editar</a>
+                <a href="{% url 'livro-delete' object.id %}" class="btn btn-danger mt-3">Excluir</a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

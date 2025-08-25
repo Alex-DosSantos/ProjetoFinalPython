@@ -1,7 +1,7 @@
-# biblioteca_core/models.py
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from datetime import date 
 
 class Livro(models.Model):
     titulo = models.CharField(max_length=200, help_text="Título do livro")
@@ -17,11 +17,9 @@ class Livro(models.Model):
         ordering = ['titulo']
 
     def get_absolute_url(self):
-        """Retorna a URL para acessar uma instância específica de um livro."""
         return reverse('livro-detail', args=[str(self.id)])
 
     def __str__(self):
-        """String para representar o objeto do Model."""
         return self.titulo
 
 class Emprestimo(models.Model):
@@ -41,3 +39,18 @@ class Emprestimo(models.Model):
 
     def __str__(self):
         return f"{self.livro.titulo} emprestado para {self.aluno.username}"
+
+    
+    @property
+    def foi_devolvido_com_atraso(self):
+        """ Retorna True se o livro foi devolvido após a data prevista. """
+        if self.data_devolucao_real and self.data_devolucao_real > self.data_devolucao_prevista:
+            return True
+        return False
+
+    @property
+    def esta_atrasado(self):
+        """ Retorna True se o empréstimo está ativo e a data atual já passou da data prevista. """
+        if self.status == 'ativo' and date.today() > self.data_devolucao_prevista:
+            return True
+        return False
