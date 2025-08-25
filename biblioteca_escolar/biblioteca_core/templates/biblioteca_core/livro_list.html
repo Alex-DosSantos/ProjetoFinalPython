@@ -4,17 +4,36 @@
         <h1>Lista de Livros</h1>
         <a href="{% url 'livro-create' %}" class="btn btn-success">Adicionar Livro</a>
     </div>
-    <ul class="list-group">
+
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" name="q" placeholder="Buscar por título ou autor..." value="{{ request.GET.q|default_if_none:'' }}">
+            <button class="btn btn-outline-primary" type="submit">Buscar</button>
+        </div>
+    </form>
+
+    <div class="list-group">
         {% for livro in livros %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="{{ livro.get_absolute_url }}">{{ livro.titulo }}</a>
-                <span>
-                    <a href="{% url 'livro-update' livro.id %}" class="btn btn-sm btn-warning">Editar</a>
-                    <a href="{% url 'livro-delete' livro.id %}" class="btn btn-sm btn-danger">Excluir</a>
-                </span>
-            </li>
+            <a href="{{ livro.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <div class="row align-items-center">
+                    <div class="col-md-1 col-3">
+                        {% if livro.capa %}
+                            <img src="{{ livro.capa.url }}" class="img-fluid rounded" alt="Capa de {{ livro.titulo }}">
+                        {% else %}
+                             <div class="bg-secondary" style="width: 60px; height: 90px; border-radius: 4px;"></div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8 col-9">
+                        <h5 class="mb-1">{{ livro.titulo }}</h5>
+                        <p class="mb-1 text-muted">{{ livro.autor }}</p>
+                    </div>
+                    <div class="col-md-3 text-md-end mt-2 mt-md-0">
+                        <span class="btn btn-sm btn-warning">Ver Detalhes</span>
+                    </div>
+                </div>
+            </a>
         {% empty %}
-            <li class="list-group-item">Nenhum livro cadastrado.</li>
+            <li class="list-group-item">Nenhum livro encontrado.</li>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}

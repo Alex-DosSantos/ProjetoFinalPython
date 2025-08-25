@@ -1,10 +1,67 @@
 {% extends 'biblioteca_core/base.html' %}
+
 {% block content %}
-    <div class="p-5 mb-4 bg-light rounded-3">
-        <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold">Bem-vindo ao Sistema da Biblioteca</h1>
-            <p class="col-md-8 fs-4">Gerencie livros e empréstimos de forma fácil e eficiente.</p>
-            <a href="{% url 'livro-list' %}" class="btn btn-primary btn-lg">Ver Livros</a>
+    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-light">
+        <div class="col-lg-8 px-0">
+            <h1 class="display-4 fst-italic">Bem-vindo ao Painel da Biblioteca</h1>
+            <p class="lead my-3">Gerencie os recursos da biblioteca de forma rápida e eficiente. Acompanhe abaixo as principais estatísticas e os livros recém-chegados ao nosso acervo.</p>
         </div>
     </div>
-{% endblock %}
+
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card text-center text-bg-primary shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="card-title display-4"><i class="bi bi-book me-2"></i>{{ num_livros }}</h2>
+                    <p class="card-text fs-5">Livros Cadastrados</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center text-bg-warning shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="card-title display-4"><i class="bi bi-arrow-left-right me-2"></i>{{ num_emprestimos_ativos }}</h2>
+                    <p class="card-text fs-5">Empréstimos Ativos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center text-bg-success shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="card-title display-4"><i class="bi bi-people-fill me-2"></i>{{ num_usuarios }}</h2>
+                    <p class="card-text fs-5">Usuários Registrados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="border-bottom pb-2">Adicionados Recentemente</h2>
+        <a href="{% url 'livro-list' %}" class="btn btn-outline-secondary">Ver todo o acervo</a>
+    </div>
+
+    <div class="row">
+        {% for livro in livros_recentes %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm book-card">
+                    <a href="{{ livro.get_absolute_url }}">
+                        {% if livro.capa %}
+                            <img src="{{ livro.capa.url }}" class="card-img-top" alt="Capa de {{ livro.titulo }}" style="height: 350px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 350px;">
+                                <small>Capa não disponível</small>
+                            </div>
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ livro.titulo|truncatechars:40 }}</h5>
+                        <p class="card-text text-muted">{{ livro.autor }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col">
+                <p class="text-center">Nenhum livro foi cadastrado ainda.</p>
+            </div>
+        {% endfor %}
+    </div>
+    {% endblock %}
